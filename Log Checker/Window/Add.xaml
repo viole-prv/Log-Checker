@@ -1,0 +1,150 @@
+﻿<controls:MetroWindow
+    x:Class="LogChecker.Add"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+    Name="MetroWindow"
+    Width="270"
+    Closing="MetroWindow_Closing"
+    ResizeMode="CanMinimize"
+    ShowIconOnTitleBar="False"
+    ShowMaxRestoreButton="False"
+    SizeToContent="Height"
+    WindowStartupLocation="CenterOwner">
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0">
+            <TextBox
+                Width="180"
+                Height="22"
+                MinHeight="26"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                controls:TextBoxHelper.Watermark="{Binding Watermark}"
+                BorderThickness="0,0,0,1"
+                Text="{Binding Key, UpdateSourceTrigger=PropertyChanged}" />
+            <StackPanel>
+                <StackPanel.Style>
+                    <Style TargetType="{x:Type StackPanel}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Dictionary}" Value="True">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Dictionary}" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
+                <TextBox
+                    Width="180"
+                    Height="22"
+                    MinHeight="26"
+                    Margin="0,5,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    controls:TextBoxHelper.Watermark="IP"
+                    BorderThickness="0,0,0,1"
+                    Text="{Binding IP, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Width="180"
+                    Height="22"
+                    MinHeight="26"
+                    Margin="0,5,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    controls:TextBoxHelper.Watermark="Password"
+                    BorderThickness="0,0,0,1"
+                    Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+            <Button
+                Width="140"
+                Height="26"
+                Margin="0,8,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Command="{Binding Add}"
+                Content="ADD"
+                Style="{StaticResource Button}" />
+        </StackPanel>
+        <ListView
+            Grid.Row="1"
+            Width="200"
+            MaxHeight="100"
+            Margin="0,10,0,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            ItemsSource="{Binding Collection}"
+            SelectionMode="Single"
+            Visibility="{Binding Visibility, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ListView.ItemContainerStyle>
+                <Style BasedOn="{StaticResource ListView}" TargetType="{x:Type ListViewItem}">
+                    <Setter Property="Focusable" Value="false" />
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding Key}">
+                            <TextBlock.Style>
+                                <Style BasedOn="{StaticResource TextBlock}" TargetType="{x:Type TextBlock}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ElementName=MetroWindow, Path=DataContext.Dictionary}" Value="True">
+                                            <Setter Property="ToolTip">
+                                                <Setter.Value>
+                                                    <TextBlock>
+                                                        <Run Text="{Binding StringFormat={}IP: {0}, Path=IP}" />
+                                                        <Run>
+                                                            <Run.Style>
+                                                                <Style TargetType="{x:Type Run}">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Password, Converter={StaticResource StringToBooleanConverter}}" Value="True">
+                                                                            <Setter Property="Text" Value="{Binding StringFormat={}\&#x0a;Password: {0}, Path=Password}" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Run.Style>
+                                                        </Run>
+                                                    </TextBlock>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <Button
+                            Grid.Column="1"
+                            Width="12"
+                            Height="12"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            controls:ControlsHelper.DisabledVisualElementVisibility="Hidden"
+                            controls:ControlsHelper.FocusBorderBrush="Transparent"
+                            controls:ControlsHelper.FocusBorderThickness="0"
+                            controls:ControlsHelper.MouseOverBorderBrush="Transparent"
+                            AllowDrop="True"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="0"
+                            Click="Remove_Click"
+                            Focusable="False"
+                            Style="{StaticResource Icon}">
+                            <Path
+                                Data="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+                                Fill="MediumPurple"
+                                Stretch="Fill" />
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</controls:MetroWindow>
